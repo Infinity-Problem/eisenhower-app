@@ -82,8 +82,15 @@ def web_root() -> Path:
 
 
 def data_dir() -> Path:
-    appdata = os.environ.get("APPDATA") or str(Path.home() / "AppData" / "Roaming")
-    d = Path(appdata) / APP_NAME
+    """Cross-platform per-user data directory."""
+    if sys.platform == "win32":
+        base = os.environ.get("APPDATA") or str(Path.home() / "AppData" / "Roaming")
+        d = Path(base) / APP_NAME
+    elif sys.platform == "darwin":
+        d = Path.home() / "Library" / "Application Support" / APP_NAME
+    else:
+        base = os.environ.get("XDG_CONFIG_HOME") or str(Path.home() / ".config")
+        d = Path(base) / APP_NAME
     d.mkdir(parents=True, exist_ok=True)
     return d
 
@@ -93,19 +100,34 @@ def data_file() -> Path:
 
 
 def acquire_single_instance() -> bool:
-    """Return True if we got the mutex (we are the only instance)."""
-    if sys.platform != "win32":
+    """Return True if we are the only instance running."""
+    if sys.platform == "win32":
+        kernel32 = ctypes.windll.kernel32
+        handle = kernel32.CreateMutexW(None, False, MUTEX_NAME)
+        last_error = kernel32.GetLastError()
+        ERROR_ALREADY_EXISTS = 183
+        if last_error == ERROR_ALREADY_EXISTS:
+            if handle:
+                kernel32.CloseHandle(handle)
+            return False
+        # Intentionally leak the handle for the lifetime of the process.
         return True
-    kernel32 = ctypes.windll.kernel32
-    handle = kernel32.CreateMutexW(None, False, MUTEX_NAME)
-    last_error = kernel32.GetLastError()
-    ERROR_ALREADY_EXISTS = 183
-    if last_error == ERROR_ALREADY_EXISTS:
-        if handle:
-            kernel32.CloseHandle(handle)
-        return False
-    # Intentionally leak the handle for the lifetime of the process.
-    return True
+
+    # POSIX (macOS / Linux): fcntl exclusive lock on a file in the data dir.
+    # The fp is intentionally leaked for the process lifetime.
+    try:
+        import fcntl  # noqa: PLC0415
+        lock_path = data_dir() / ".singleton.lock"
+        fp = open(lock_path, "w")  # noqa: SIM115
+        try:
+            fcntl.flock(fp.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            fp.close()
+            return False
+        return True
+    except Exception:
+        # If we can't even attempt the lock, assume single-instance and proceed.
+        return True
 
 
 class Api:

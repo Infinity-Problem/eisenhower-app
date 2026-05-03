@@ -14,9 +14,9 @@ A standalone Windows desktop app where the Eisenhower priority matrix *is* the e
 
 ## Install
 
-Download `Eisenhower.exe` from the [latest release](../../releases) and double-click. No installer, no dependencies, no admin rights.
+**Windows** — Download `Eisenhower-windows.exe` (or `Eisenhower.exe`) from the [latest release](../../releases) and double-click. No installer, no dependencies, no admin rights. Tasks live in `%APPDATA%\Eisenhower\tasks.json`.
 
-Tasks live in `%APPDATA%\Eisenhower\tasks.json`.
+**macOS** — Download `Eisenhower-macos.zip`, unzip, drag `Eisenhower.app` into Applications. The build is unsigned, so first launch needs a right-click → Open to bypass Gatekeeper. Tasks live in `~/Library/Application Support/Eisenhower/tasks.json`.
 
 ## Features
 

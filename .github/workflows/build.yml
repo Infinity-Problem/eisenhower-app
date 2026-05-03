@@ -1,0 +1,86 @@
+name: Build & Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Optional release tag to attach the build to (e.g. v0.2.0). Leave blank for artifacts only.'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            asset_name: Eisenhower-windows.exe
+            artifact_path: dist/Eisenhower.exe
+          - os: macos-latest
+            asset_name: Eisenhower-macos.zip
+            artifact_path: dist/Eisenhower-macos.zip
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Build (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          pyinstaller --noconfirm --clean Eisenhower.spec
+
+      - name: Build (macOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          pyinstaller --noconfirm --clean --windowed --name Eisenhower \
+            --add-data "web:web" \
+            --hidden-import google \
+            --hidden-import google.auth \
+            --hidden-import google.auth.transport \
+            --hidden-import google.auth.transport.requests \
+            --hidden-import google.oauth2 \
+            --hidden-import google.oauth2.credentials \
+            --hidden-import google_auth_oauthlib \
+            --hidden-import google_auth_oauthlib.flow \
+            --hidden-import googleapiclient \
+            --hidden-import googleapiclient.discovery \
+            --hidden-import googleapiclient.discovery_cache \
+            --hidden-import googleapiclient.discovery_cache.base \
+            launch.pyw
+          # PyInstaller produces dist/Eisenhower.app on macOS — zip it for transit.
+          cd dist && zip -r Eisenhower-macos.zip Eisenhower.app
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.asset_name }}
+          path: ${{ matrix.artifact_path }}
+
+      - name: Attach to release (on tag push)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ matrix.artifact_path }}
+
+      - name: Attach to release (on manual dispatch with tag input)
+        if: github.event_name == 'workflow_dispatch' && inputs.tag != ''
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.tag }}
+          files: ${{ matrix.artifact_path }}
