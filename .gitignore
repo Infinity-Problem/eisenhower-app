@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+.venv/
+venv/
+
+# PyInstaller build artifacts
+build/
+dist/
+*.manifest
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local user data — these live in %APPDATA%/Eisenhower/, not here, but
+# in case anyone runs the app from a sibling folder, keep them out.
+tasks.json
+gcal_token.json

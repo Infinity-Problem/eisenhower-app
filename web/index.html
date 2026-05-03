@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eisenhower</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="resize-handle resize-n"  data-edge="n"></div>
+<div class="resize-handle resize-s"  data-edge="s"></div>
+<div class="resize-handle resize-e"  data-edge="e"></div>
+<div class="resize-handle resize-w"  data-edge="w"></div>
+<div class="resize-handle resize-ne" data-edge="ne"></div>
+<div class="resize-handle resize-nw" data-edge="nw"></div>
+<div class="resize-handle resize-se" data-edge="se"></div>
+<div class="resize-handle resize-sw" data-edge="sw"></div>
+
+<header id="titlebar">
+  <div class="titlebar-drag" id="titlebar-drag">
+    <span class="titlebar-title">EISENHOWER</span>
+    <span class="titlebar-sub" id="task-count">0 tasks</span>
+  </div>
+  <div class="titlebar-actions">
+    <button id="btn-clear-completed" class="titlebar-btn" title="Clear completed">CLEAR DONE</button>
+    <button id="btn-settings" class="titlebar-btn icon-btn" title="Settings">&#9881;</button>
+    <button id="btn-fullscreen" class="titlebar-btn icon-btn" title="Toggle fullscreen (F11)">&#9974;</button>
+    <button id="btn-minimize" class="titlebar-btn icon-btn" title="Minimize">&#8211;</button>
+    <button id="btn-close" class="titlebar-btn icon-btn close-btn" title="Close">&#10005;</button>
+  </div>
+</header>
+
+<nav id="filterbar">
+  <div class="filter-group">
+    <span class="filter-label">FILTER</span>
+    <button class="filter-chip selected" data-filter="all">All</button>
+    <button class="filter-chip" data-filter="today">Today</button>
+    <button class="filter-chip" data-filter="tomorrow">Tomorrow</button>
+    <button class="filter-chip" data-filter="week">This Week</button>
+    <button class="filter-chip" data-filter="month">This Month</button>
+    <button class="filter-chip filter-pastdue" data-filter="pastdue">Past Due</button>
+    <button class="filter-chip filter-done" data-filter="done">Done</button>
+  </div>
+
+  <div id="adoption-strip" class="idle">
+    <span class="adopt-dot"></span>
+    <span class="adopt-label">NO TASK IN PROGRESS</span>
+    <span class="adopt-text" id="adopt-text"></span>
+    <span class="adopt-timer" id="adopt-timer">00:00:00</span>
+    <button type="button" id="btn-release" class="adopt-stop" title="Stop tracking">&#9632;</button>
+  </div>
+</nav>
+
+<main id="layout">
+
+  <div id="matrix">
+
+    <section class="quadrant" data-quadrant="do">
+      <div class="quadrant-head">
+        <div>
+          <span class="quadrant-verb">DO</span>
+          <span class="quadrant-label">Urgent &middot; Important</span>
+        </div>
+        <span class="quadrant-count" data-count="do">0</span>
+      </div>
+      <form class="quadrant-add" data-quadrant="do">
+        <input type="text" class="quadrant-add-input" data-quadrant="do" placeholder="+ add to do" maxlength="200">
+      </form>
+      <ul class="task-list" data-quadrant="do"></ul>
+    </section>
+
+    <section class="quadrant" data-quadrant="schedule">
+      <div class="quadrant-head">
+        <div>
+          <span class="quadrant-verb">SCHEDULE</span>
+          <span class="quadrant-label">Not Urgent &middot; Important</span>
+        </div>
+        <span class="quadrant-count" data-count="schedule">0</span>
+      </div>
+      <form class="quadrant-add" data-quadrant="schedule">
+        <input type="text" class="quadrant-add-input" data-quadrant="schedule" placeholder="+ add to schedule" maxlength="200">
+      </form>
+      <ul class="task-list" data-quadrant="schedule"></ul>
+    </section>
+
+    <section class="quadrant" data-quadrant="delegate">
+      <div class="quadrant-head">
+        <div>
+          <span class="quadrant-verb">DELEGATE</span>
+          <span class="quadrant-label">Urgent &middot; Not Important</span>
+        </div>
+        <span class="quadrant-count" data-count="delegate">0</span>
+      </div>
+      <form class="quadrant-add" data-quadrant="delegate">
+        <input type="text" class="quadrant-add-input" data-quadrant="delegate" placeholder="+ add to delegate" maxlength="200">
+      </form>
+      <ul class="task-list" data-quadrant="delegate"></ul>
+    </section>
+
+    <section class="quadrant" data-quadrant="delete">
+      <div class="quadrant-head">
+        <div>
+          <span class="quadrant-verb">DELETE</span>
+          <span class="quadrant-label">Not Urgent &middot; Not Important</span>
+        </div>
+        <span class="quadrant-count" data-count="delete">0</span>
+      </div>
+      <form class="quadrant-add" data-quadrant="delete">
+        <input type="text" class="quadrant-add-input" data-quadrant="delete" placeholder="+ add to delete" maxlength="200">
+      </form>
+      <ul class="task-list" data-quadrant="delete"></ul>
+    </section>
+
+  </div>
+
+  <aside id="input-column">
+    <div class="input-col-head">
+      <span class="input-col-title">NEW TASK</span>
+      <span class="input-col-hint">enter to send &middot; 1-4 for quadrant</span>
+    </div>
+
+    <textarea
+      id="global-input"
+      class="global-input"
+      placeholder="What needs doing?"
+      maxlength="200"
+      rows="3"
+      autofocus></textarea>
+
+    <div class="date-row">
+      <input type="date" id="due-date" class="date-input" title="Due date (optional)">
+      <button type="button" id="btn-date-today" class="date-pill" title="Set to today">today</button>
+      <button type="button" id="btn-date-tomorrow" class="date-pill" title="Set to tomorrow">+1d</button>
+      <button type="button" id="btn-date-clear" class="date-pill" title="Clear date">&#10005;</button>
+    </div>
+
+    <div class="quadrant-picker">
+      <button type="button" class="picker-btn" data-quadrant="do"       data-key="1">
+        <span class="picker-key">1</span>
+        <span class="picker-verb">DO</span>
+      </button>
+      <button type="button" class="picker-btn" data-quadrant="schedule" data-key="2">
+        <span class="picker-key">2</span>
+        <span class="picker-verb">SCHEDULE</span>
+      </button>
+      <button type="button" class="picker-btn" data-quadrant="delegate" data-key="3">
+        <span class="picker-key">3</span>
+        <span class="picker-verb">DELEGATE</span>
+      </button>
+      <button type="button" class="picker-btn" data-quadrant="delete"   data-key="4">
+        <span class="picker-key">4</span>
+        <span class="picker-verb">DELETE</span>
+      </button>
+    </div>
+
+    <div class="dataviz">
+      <div class="dataviz-section">
+        <div class="dataviz-head">
+          <span class="dataviz-title">PROGRESS</span>
+          <span class="dataviz-scope" id="battery-scope">all</span>
+        </div>
+        <div class="battery">
+          <div class="battery-shell">
+            <div class="battery-fill" id="battery-fill" style="width: 0%"></div>
+            <span class="battery-text" id="battery-text">0 / 0</span>
+          </div>
+          <div class="battery-cap"></div>
+        </div>
+        <div class="battery-pct" id="battery-pct">0%</div>
+      </div>
+
+      <div class="dataviz-section">
+        <div class="dataviz-head">
+          <span class="dataviz-title">OPEN TASKS BY QUADRANT</span>
+          <span class="dataviz-scope" id="count-scope">all</span>
+        </div>
+        <div class="pie-wrap">
+          <svg class="pie" id="count-svg" viewBox="0 0 100 100" aria-label="Open tasks by quadrant">
+            <circle cx="50" cy="50" r="44" fill="none" stroke="var(--line)" stroke-width="2"></circle>
+          </svg>
+          <div class="pie-total" id="count-total">no open tasks</div>
+        </div>
+        <div class="pie-legend" id="count-legend"></div>
+      </div>
+
+      <div class="dataviz-section">
+        <div class="dataviz-head">
+          <span class="dataviz-title">TIME BY QUADRANT</span>
+          <span class="dataviz-scope" id="pie-scope">all</span>
+        </div>
+        <div class="pie-wrap">
+          <svg class="pie" id="pie-svg" viewBox="0 0 100 100" aria-label="Time spent by quadrant">
+            <circle cx="50" cy="50" r="44" fill="none" stroke="var(--line)" stroke-width="2"></circle>
+          </svg>
+          <div class="pie-total" id="pie-total">no time tracked</div>
+        </div>
+        <div class="pie-legend" id="pie-legend"></div>
+      </div>
+    </div>
+  </aside>
+
+</main>
+
+<div id="settings-overlay" class="hidden" aria-hidden="true">
+  <div class="settings-panel" role="dialog" aria-label="Settings">
+    <header class="settings-head">
+      <span class="settings-title">SETTINGS</span>
+      <button type="button" class="settings-close" id="btn-settings-close" title="Close">&#10005;</button>
+    </header>
+    <div class="settings-body">
+
+      <section class="settings-row settings-row-stacked">
+        <div class="settings-row-head">
+          <div class="settings-row-main">
+            <div class="settings-row-title">Google Calendar Sync</div>
+            <div class="settings-row-desc">Push tasks with due dates to a Google Calendar as all-day events. Title format: <code>[QUADRANT] task text</code>. Completing a task adds <code>&#10003;</code>; archiving removes the event.</div>
+          </div>
+          <div class="settings-row-aside">
+            <span class="settings-status not-connected" id="gcal-status">NOT CONNECTED</span>
+            <button type="button" class="settings-btn" id="btn-gcal-toggle">Configure</button>
+          </div>
+        </div>
+
+        <div class="settings-detail hidden" id="gcal-detail">
+
+          <!-- Step 1: credentials -->
+          <div class="settings-block" id="gcal-creds-block">
+            <div class="settings-block-title">1. OAuth credentials</div>
+            <div class="settings-block-help">
+              Create a Desktop OAuth client in Google Cloud Console (APIs &amp; Services &rarr; Credentials), enable the Google Calendar API, then paste the client ID and secret below.
+              <button type="button" class="link-btn" id="btn-gcal-open-console">Open Google Cloud Console</button>
+            </div>
+            <div class="settings-field">
+              <label>Client ID</label>
+              <input type="text" id="gcal-client-id" placeholder="123456789-xxxxxxxxxxxxxxxx.apps.googleusercontent.com" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="settings-field">
+              <label>Client Secret</label>
+              <input type="password" id="gcal-client-secret" placeholder="GOCSPX-..." autocomplete="off" spellcheck="false">
+            </div>
+            <div class="settings-actions">
+              <button type="button" class="settings-btn" id="btn-gcal-save-creds">Save credentials</button>
+            </div>
+          </div>
+
+          <!-- Step 2: connect -->
+          <div class="settings-block" id="gcal-connect-block">
+            <div class="settings-block-title">2. Authorize</div>
+            <div class="settings-block-help">
+              Click Connect — your browser will open Google's consent screen. Approve to grant calendar access. The token is stored locally in <code>%APPDATA%\Eisenhower\gcal_token.json</code>.
+            </div>
+            <div class="settings-actions">
+              <button type="button" class="settings-btn primary" id="btn-gcal-connect" disabled>Connect with Google</button>
+              <span class="settings-inline-status" id="gcal-connect-status"></span>
+            </div>
+          </div>
+
+          <!-- Step 3: configure + sync -->
+          <div class="settings-block hidden" id="gcal-sync-block">
+            <div class="settings-block-title">3. Sync</div>
+            <div class="settings-field">
+              <label>Connected as</label>
+              <div class="settings-readout" id="gcal-email">&mdash;</div>
+            </div>
+            <div class="settings-field">
+              <label>Target calendar</label>
+              <div class="settings-row-flex">
+                <select id="gcal-calendar"></select>
+                <button type="button" class="settings-btn" id="btn-gcal-refresh-calendars" title="Reload calendar list">&#8635;</button>
+              </div>
+            </div>
+            <div class="settings-actions">
+              <button type="button" class="settings-btn primary" id="btn-gcal-sync">Sync now</button>
+              <button type="button" class="settings-btn" id="btn-gcal-disconnect">Disconnect</button>
+              <span class="settings-inline-status" id="gcal-sync-status"></span>
+            </div>
+            <div class="settings-meta" id="gcal-last-sync"></div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+    <footer class="settings-foot">
+      <span class="settings-version">Eisenhower v0.2</span>
+    </footer>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

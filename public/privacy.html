@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eisenhower — Privacy Policy</title>
+<style>
+  :root { --bg:#0a0e14; --panel:#11161f; --line:#1f2733; --text:#d8e1ec; --dim:#6b7a8f; --faint:#3a4556; --schedule:#2bd97a; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--text); font: 15px/1.6 'Segoe UI', system-ui, sans-serif; }
+  a { color: var(--schedule); }
+  main { max-width: 720px; margin: 0 auto; padding: 50px 28px 80px; }
+  h1 { font-size: 28px; margin-bottom: 6px; }
+  .meta { color: var(--faint); font-size: 12px; letter-spacing: 1px; margin-bottom: 32px; }
+  h2 { font-size: 17px; margin: 28px 0 10px; color: var(--text); }
+  p, li { color: var(--text); margin-bottom: 10px; }
+  ul { padding-left: 22px; }
+  code { background: var(--panel); padding: 1px 5px; border-radius: 2px; font-size: 13px; }
+  .nav { font-size: 12px; color: var(--dim); margin-bottom: 24px; }
+  .nav a { color: var(--dim); }
+</style>
+</head>
+<body>
+<main>
+  <div class="nav"><a href="index.html">&larr; Eisenhower</a></div>
+  <h1>Privacy Policy</h1>
+  <p class="meta">Last updated: 3 May 2026</p>
+
+  <h2>What we collect</h2>
+  <p>Eisenhower is a desktop application. It collects no data on its own. All task content — text, due dates, completion status, accumulated time-spent, archive flags — is stored locally on your machine in <code>%APPDATA%\Eisenhower\tasks.json</code>. We do not run a server. We do not transmit your task data to anyone.</p>
+
+  <h2>Google Calendar sync (optional)</h2>
+  <p>If you choose to enable Google Calendar sync, the application requests the <code>https://www.googleapis.com/auth/calendar</code> OAuth scope. With your authorization, it does the following and only the following:</p>
+  <ul>
+    <li>Lists the calendars in your Google account so you can pick a target.</li>
+    <li>Creates, updates, and deletes events on the calendar you select. Each event corresponds to a task in your local matrix that has a due date and is not archived.</li>
+    <li>Reads back the event ID it created so it can update or delete the event later.</li>
+  </ul>
+  <p>The OAuth refresh token issued by Google is stored locally on your machine in <code>%APPDATA%\Eisenhower\gcal_token.json</code>. It is never transmitted off your machine except to Google's own servers when refreshing. You can revoke it at any time by clicking Disconnect in the settings panel, by deleting that file, or via your <a href="https://myaccount.google.com/permissions">Google Account permissions page</a>.</p>
+  <p>Eisenhower does not read events you did not create. It does not modify your other calendar entries. It does not share, sell, sublicense, or transfer Google user data to any third party.</p>
+
+  <h2>Telemetry</h2>
+  <p>None. The application has no analytics, no error reporting, no phone-home of any kind.</p>
+
+  <h2>Children</h2>
+  <p>Eisenhower is not directed to children under 13 and does not knowingly collect data from children.</p>
+
+  <h2>Changes to this policy</h2>
+  <p>If this policy changes materially, the updated version will be published at this URL with a revised "Last updated" date.</p>
+
+  <h2>Contact</h2>
+  <p>Questions: management@supertask.net</p>
+</main>
+</body>
+</html>

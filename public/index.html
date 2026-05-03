@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eisenhower — Priority matrix for getting actual work done</title>
+<meta name="description" content="A standalone Windows desktop app where the Eisenhower priority matrix is the entire UI. Local-first, with optional Google Calendar sync.">
+<style>
+  :root {
+    --bg: #0a0e14; --panel: #11161f; --line: #1f2733;
+    --text: #d8e1ec; --dim: #6b7a8f; --faint: #3a4556;
+    --do: #ff4d4d; --schedule: #2bd97a; --delegate: #ffb020; --delete: #5a6878;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--text); font: 15px/1.55 'Segoe UI', system-ui, sans-serif; }
+  a { color: var(--schedule); }
+  main { max-width: 760px; margin: 0 auto; padding: 60px 28px 80px; }
+  h1 { font-size: 38px; letter-spacing: -0.5px; margin-bottom: 14px; }
+  h1 small { display: block; font-size: 11px; letter-spacing: 4px; color: var(--faint); font-weight: 400; margin-bottom: 8px; }
+  h2 { font-size: 20px; letter-spacing: 0.5px; margin: 40px 0 12px; }
+  p { color: var(--text); margin-bottom: 14px; }
+  .lead { color: var(--dim); font-size: 17px; margin-bottom: 32px; }
+  .matrix { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 4px; margin: 24px 0 36px; aspect-ratio: 16/9; }
+  .quad { background: var(--bg); padding: 18px; border-top: 2px solid; }
+  .q1 { border-color: var(--do); }
+  .q2 { border-color: var(--schedule); }
+  .q3 { border-color: var(--delegate); }
+  .q4 { border-color: var(--delete); }
+  .quad b { font-size: 11px; letter-spacing: 2px; }
+  .q1 b { color: var(--do); } .q2 b { color: var(--schedule); }
+  .q3 b { color: var(--delegate); } .q4 b { color: var(--delete); }
+  .quad span { display: block; font-size: 10px; letter-spacing: 1.5px; color: var(--faint); margin-top: 4px; }
+  ul { padding-left: 22px; color: var(--text); margin-bottom: 16px; }
+  ul li { margin-bottom: 6px; }
+  footer { color: var(--faint); font-size: 12px; padding-top: 40px; border-top: 1px solid var(--line); margin-top: 60px; display: flex; gap: 18px; flex-wrap: wrap; }
+  footer a { color: var(--dim); text-decoration: none; }
+  footer a:hover { color: var(--text); }
+</style>
+</head>
+<body>
+<main>
+
+  <h1><small>EISENHOWER</small>Priority matrix for getting actual work done</h1>
+  <p class="lead">A standalone Windows desktop app where the Eisenhower decision matrix <em>is</em> the entire UI. Local-first storage, time tracking per task, drag-and-drop between quadrants, and optional one-way sync to Google Calendar.</p>
+
+  <div class="matrix">
+    <div class="quad q1"><b>DO</b><span>URGENT &middot; IMPORTANT</span></div>
+    <div class="quad q2"><b>SCHEDULE</b><span>NOT URGENT &middot; IMPORTANT</span></div>
+    <div class="quad q3"><b>DELEGATE</b><span>URGENT &middot; NOT IMPORTANT</span></div>
+    <div class="quad q4"><b>DELETE</b><span>NOT URGENT &middot; NOT IMPORTANT</span></div>
+  </div>
+
+  <h2>What it does</h2>
+  <ul>
+    <li>Add tasks straight into any of the four quadrants, or use a global input column with a date picker.</li>
+    <li>Drag tasks between quadrants when priorities shift.</li>
+    <li>Adopt a task to start a live time tracker; the elapsed time accrues to that task across sessions.</li>
+    <li>Filter the board by Today / Tomorrow / This Week / This Month / Past Due / Done.</li>
+    <li>Battery shows completion progress for the active filter; donut charts split open tasks and tracked time across the four quadrants.</li>
+    <li>Optional Google Calendar sync mirrors any task with a due date as an all-day event.</li>
+  </ul>
+
+  <h2>Privacy</h2>
+  <p>All task data lives on your machine in <code>%APPDATA%\Eisenhower\tasks.json</code>. Google Calendar sync, when enabled, only pushes tasks-with-dates to a calendar you choose. See the <a href="privacy.html">Privacy Policy</a> for details.</p>
+
+  <footer>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="terms.html">Terms of Service</a>
+    <span style="margin-left:auto">Eisenhower &middot; built personally</span>
+  </footer>
+</main>
+</body>
+</html>
