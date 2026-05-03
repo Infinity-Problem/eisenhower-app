@@ -20,11 +20,11 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            asset_name: Eisenhower-windows.exe
+            asset_name: Eisenhower.exe
             artifact_path: dist/Eisenhower.exe
           - os: macos-latest
-            asset_name: Eisenhower-macos.zip
-            artifact_path: dist/Eisenhower-macos.zip
+            asset_name: Eisenhower.dmg
+            artifact_path: dist/Eisenhower.dmg
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -63,8 +63,13 @@ jobs:
             --hidden-import googleapiclient.discovery_cache \
             --hidden-import googleapiclient.discovery_cache.base \
             launch.pyw
-          # PyInstaller produces dist/Eisenhower.app on macOS — zip it for transit.
-          cd dist && zip -r Eisenhower-macos.zip Eisenhower.app
+          # PyInstaller produces dist/Eisenhower.app — wrap it in a compressed DMG
+          # using hdiutil (built into macOS, zero deps).
+          hdiutil create \
+            -volname Eisenhower \
+            -srcfolder dist/Eisenhower.app \
+            -ov -format UDZO \
+            dist/Eisenhower.dmg
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
